@@ -11,3 +11,5 @@ typedef int bool;
 //                           Window Functions
 // #############################################################################
 bool create_window(const char *title, int width, int height);
+bool window_isOpen();
+void close_window();

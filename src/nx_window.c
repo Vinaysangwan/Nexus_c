@@ -1,27 +1,63 @@
 #include "Nexus_c.h"
 
-#ifdef _WIN32
+// #############################################################################
+//                           Statics
+// #############################################################################
+static bool running = true;
 
+#ifdef _WIN32
 // #############################################################################
 //                           WIN API
 // #############################################################################
 #include <Windows.h>
 
+// ------- WIN API Statics ------------------------------- //
+static HWND window;
+static wchar_t wtitle[256];
+static HINSTANCE instance;
+
+// ------- Callbacks ------------------------------- //
+static LRESULT CALLBACK window_proc_callback(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+  LRESULT result = 0;
+
+  switch (msg)
+  {
+  
+  case WM_CLOSE:
+  {
+    running = false;
+    DestroyWindow(window);
+
+    break;
+  }
+
+  default:
+  {
+    result = DefWindowProcW(window, msg, wParam, lParam);
+
+    break;
+  }
+  }
+
+  return result;
+}
+
+// ------- Functions ------------------------------- //
 bool create_window(const char *title, int width, int height)
 {
-  wchar_t wtitle[256] = {0};
   MultiByteToWideChar(CP_UTF8, 0, title, -1, wtitle, 256);
   
   // Get Instance
-  HINSTANCE instance = GetModuleHandleW(0);
+  instance = GetModuleHandleW(0);
 
   // Create Window Class
   WNDCLASSW wc = {
     .hInstance = instance,
     .hCursor = LoadCursorW(NULL, (LPCWSTR)IDC_ARROW),
     .hIcon = LoadIconW(NULL, (LPCWSTR)IDI_APPLICATION),
-    .lpszClassName = (LPCWSTR)wtitle,
-    .lpfnWndProc = DefWindowProcW
+    .lpszClassName = wtitle,
+    .lpfnWndProc = window_proc_callback
   };
 
   // Register Window Class
@@ -32,9 +68,9 @@ bool create_window(const char *title, int width, int height)
 
   int dwStyle = WS_OVERLAPPEDWINDOW;
 
-  HWND window = CreateWindowExW(
+  window = CreateWindowExW(
     0,
-    (LPCWSTR)wtitle, (LPCWSTR)wtitle,
+    wtitle, wtitle,
     dwStyle,
     CW_USEDEFAULT, CW_USEDEFAULT, width, height,
     NULL, NULL,
@@ -49,6 +85,30 @@ bool create_window(const char *title, int width, int height)
 
   ShowWindow(window, SW_SHOWDEFAULT);
   return true;
+}
+
+bool window_isOpen()
+{
+  MSG msg = {0};  
+
+  while (PeekMessageW(&msg, NULL, 0, 0, PM_REMOVE))
+  {
+    TranslateMessage(&msg);
+    DispatchMessageW(&msg);
+  }
+
+  return running;
+}
+
+void close_window()
+{
+  if (window)
+  {
+    DestroyWindow(window);
+    UnregisterClassW(wtitle, instance);
+    window = NULL;
+    running = false;
+  }
 }
 
 #endif
