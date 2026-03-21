@@ -1,4 +1,4 @@
-#include "Nexus_c.h"
+#include "nx_window.h"
 
 // #############################################################################
 //                           Statics
@@ -225,6 +225,6 @@ Vec2i get_window_size()
 
 void clear_background(const Color *color)
 {
-  glClearColor((float)color->r, (float)color->g, (float)color->b, (float)color->a);
+  glClearColor((float)color->r / 255.0f, (float)color->g / 255.0f, (float)color->b / 255.0f, (float)color->a / 255.0f);
   glClear(GL_COLOR_BUFFER_BIT);
 }
