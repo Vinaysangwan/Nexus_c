@@ -63,6 +63,22 @@ static LRESULT CALLBACK window_proc_callback(HWND window, UINT msg, WPARAM wPara
     break;
   }
 
+  case WM_KEYDOWN:
+  case WM_KEYUP:
+  case WM_SYSKEYDOWN:
+  case WM_SYSKEYUP:
+  {
+    if (wParam < KEY_COUNT)
+    {
+      if (msg == WM_KEYDOWN || msg == WM_SYSKEYDOWN)
+        input.currKeys[wParam] = 1;
+      else if (msg == WM_KEYUP || msg == WM_SYSKEYUP)
+        input.currKeys[wParam] = 0;
+    }
+  
+    break;
+  }
+
   default:
   {
     result = DefWindowProcW(window, msg, wParam, lParam);
@@ -174,6 +190,9 @@ bool window_isOpen()
   SwapBuffers(dc);
   ValidateRect(window, NULL);
   
+  // Update Inputs
+  input_update();
+
   // Process Messages
   MSG msg = {0};
   while (PeekMessageW(&msg, NULL, 0, 0, PM_REMOVE))

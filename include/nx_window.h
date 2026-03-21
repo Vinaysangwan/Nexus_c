@@ -2,6 +2,7 @@
 
 #include "glad/glad.h"
 #include "nx_utils.h"
+#include "nx_inputs.h"
 
 bool create_window(const char *title, int width, int height);
 bool window_isOpen();
