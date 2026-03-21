@@ -112,7 +112,7 @@ static LRESULT CALLBACK window_proc_callback(HWND window, UINT msg, WPARAM wPara
 }
 
 // ------- Functions ------------------------------- //
-bool create_window(const char *title, int width, int height)
+bool window_create(const char *title, int width, int height)
 {
   MultiByteToWideChar(CP_UTF8, 0, title, -1, wtitle, 256);
   
@@ -225,7 +225,7 @@ bool window_isOpen()
   return running;
 }
 
-void close_window()
+void window_close()
 {
   if (window)
   {
@@ -248,17 +248,17 @@ void close_window()
 //                           Common Functions
 // #############################################################################
 
-int get_window_width()
+int window_get_width()
 {
   return windowWidth;
 }
 
-int get_window_height()
+int window_get_height()
 {
   return windowHeight;
 }
 
-Vec2i get_window_size()
+Vec2i window_get_size()
 {
   return (Vec2i){windowWidth, windowHeight};
 }
@@ -269,7 +269,7 @@ void clear_background(const Color *color)
   glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void stop_window()
+void window_stop()
 {
   running = false;
 }
