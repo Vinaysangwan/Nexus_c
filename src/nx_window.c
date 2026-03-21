@@ -15,6 +15,7 @@ static int windowHeight = 0;
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
 #include <Windows.h>
+#include <Windowsx.h>
 
 // ------- WIN API Statics ------------------------------- //
 static HWND window;
@@ -60,6 +61,42 @@ static LRESULT CALLBACK window_proc_callback(HWND window, UINT msg, WPARAM wPara
       windowHeight = HIWORD(lParam);
     }
 
+    break;
+  }
+
+  case WM_KEYDOWN:
+  case WM_KEYUP:
+  case WM_SYSKEYDOWN:
+  case WM_SYSKEYUP:
+  {
+    if (wParam < KEY_COUNT)
+    {
+      if (msg == WM_KEYDOWN || msg == WM_SYSKEYDOWN)
+        input.currKeys[wParam] = 1;
+      else if (msg == WM_KEYUP || msg == WM_SYSKEYUP)
+        input.currKeys[wParam] = 0;
+    }
+  
+    break;
+  }
+
+  case WM_LBUTTONDOWN: input.currMouseBtns[MOUSE_LEFT]   = 1; break;
+  case WM_LBUTTONUP:   input.currMouseBtns[MOUSE_LEFT]   = 0; break;
+  case WM_RBUTTONDOWN: input.currMouseBtns[MOUSE_RIGHT]  = 1; break;
+  case WM_RBUTTONUP:   input.currMouseBtns[MOUSE_RIGHT]  = 0; break;
+  case WM_MBUTTONDOWN: input.currMouseBtns[MOUSE_MIDDLE] = 1; break;
+  case WM_MBUTTONUP:   input.currMouseBtns[MOUSE_MIDDLE] = 0; break;
+
+  case WM_MOUSEMOVE:
+  {
+    input.mouseX = GET_X_LPARAM(lParam);
+    input.mouseY = GET_Y_LPARAM(lParam);
+    break;
+  }
+
+  case WM_MOUSEWHEEL:
+  {
+    input.mouseScroll = GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA;
     break;
   }
 
@@ -174,6 +211,9 @@ bool window_isOpen()
   SwapBuffers(dc);
   ValidateRect(window, NULL);
   
+  // Update Inputs
+  input_update();
+
   // Process Messages
   MSG msg = {0};
   while (PeekMessageW(&msg, NULL, 0, 0, PM_REMOVE))
@@ -227,4 +267,9 @@ void clear_background(const Color *color)
 {
   glClearColor((float)color->r / 255.0f, (float)color->g / 255.0f, (float)color->b / 255.0f, (float)color->a / 255.0f);
   glClear(GL_COLOR_BUFFER_BIT);
+}
+
+void stop_window()
+{
+  running = false;
 }

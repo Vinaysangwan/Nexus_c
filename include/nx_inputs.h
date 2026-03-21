@@ -1,5 +1,10 @@
 #pragma once
 
+#include "nx_utils.h"
+
+// #############################################################################
+//                           Enums
+// #############################################################################
 typedef enum {
   // Letters
   KEY_A = 'A', KEY_B, KEY_C, KEY_D, KEY_E,
@@ -7,16 +12,13 @@ typedef enum {
   KEY_K, KEY_L, KEY_M, KEY_N, KEY_O,
   KEY_P, KEY_Q, KEY_R, KEY_S, KEY_T,
   KEY_U, KEY_V, KEY_W, KEY_X, KEY_Y, KEY_Z,
-
   // Digits
   KEY_0 = '0', KEY_1, KEY_2, KEY_3, KEY_4,
   KEY_5,       KEY_6, KEY_7, KEY_8, KEY_9,
-
   // Function keys
   KEY_F1  = 0x70, KEY_F2,  KEY_F3,  KEY_F4,
   KEY_F5,         KEY_F6,  KEY_F7,  KEY_F8,
   KEY_F9,         KEY_F10, KEY_F11, KEY_F12,
-
   // Navigation & control
   KEY_UP        = 0x26,
   KEY_DOWN      = 0x28,
@@ -39,4 +41,58 @@ typedef enum {
   KEY_RCTRL     = 0xA3,
   KEY_LALT      = 0xA4,
   KEY_RALT      = 0xA5,
-} Keycode;
+
+  KEY_COUNT = 256
+} KeyCode;
+
+typedef enum {
+  MOUSE_LEFT   = 0,
+  MOUSE_RIGHT  = 1,
+  MOUSE_MIDDLE = 2,
+
+  MOUSE_BTN_COUNT = 3,
+} MouseButton;
+
+// #############################################################################
+//                           Structs
+// #############################################################################
+typedef struct
+{
+  // Keyboard
+  unsigned char prevKeys[KEY_COUNT];
+  unsigned char currKeys[KEY_COUNT];
+
+  // Mouse
+  unsigned char prevMouseBtns[MOUSE_BTN_COUNT];
+  unsigned char currMouseBtns[MOUSE_BTN_COUNT];
+  int mouseX, mouseY;
+  int prevMouseX, prevMouseY;
+  int mouseScroll;
+} Input;
+
+// #############################################################################
+//                           Static
+// #############################################################################
+extern Input input;
+
+// #############################################################################
+//                           Functions
+// #############################################################################
+// Keyboard Functions
+bool key_down(KeyCode key);
+bool key_pressed(KeyCode key);
+bool key_released(KeyCode key);
+
+// Mouse Functions
+bool mouse_button_down(MouseButton btn);
+bool mouse_button_pressed(MouseButton btn);
+bool mouse_button_released(MouseButton btn);
+int mouse_x(void);
+int mouse_y(void);
+Vec2i mouse_pos(void);
+int mouse_dx(void);
+int mouse_dy(void);
+int mouse_scroll(void);
+
+// Common Functions
+void input_update(void);
