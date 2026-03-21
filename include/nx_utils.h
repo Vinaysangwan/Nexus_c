@@ -1,12 +1,45 @@
 #pragma once
 
 // #############################################################################
-//                           Typedefs
+//                           Custom types
 // #############################################################################
 typedef int bool;
 #define true 1
 #define false 0
 
+// #############################################################################
+//                           Colors
+// #############################################################################
+typedef struct
+{
+  int r;
+  int g;
+  int b;
+  int a;
+} Color;
+
+extern const Color COLOR_RED;
+extern const Color COLOR_GREEN;
+extern const Color COLOR_BLUE;
+extern const Color COLOR_WHITE;
+extern const Color COLOR_BLACK;
+extern const Color COLOR_YELLOW;
+extern const Color COLOR_CYAN;
+extern const Color COLOR_MAGENTA;
+extern const Color COLOR_ORANGE;
+extern const Color COLOR_PURPLE;
+extern const Color COLOR_PINK;
+extern const Color COLOR_LIME;
+extern const Color COLOR_SKYBLUE;
+extern const Color COLOR_GOLD;
+extern const Color COLOR_BROWN;
+extern const Color COLOR_LIGHTGRAY;
+extern const Color COLOR_GRAY;
+extern const Color COLOR_DARKGRAY;
+
+// #############################################################################
+//                           Vectors
+// #############################################################################
 typedef struct
 {
   int x;
@@ -19,33 +52,41 @@ typedef struct
   float y;
 } Vec2;
 
+Vec2i vec2_i(Vec2 vec);
+Vec2 vec2i_f(Vec2i vec);
+
 typedef struct
 {
-  int r;
-  int g;
-  int b;
-  int a;
-} Color;
+  int x;
+  int y;
+  int z;
+} Vec3i;
 
-// #############################################################################
-//                           Constants
-// #############################################################################
-// Colors
-static const Color COLOR_RED        = {255,   0,   0, 255};
-static const Color COLOR_GREEN      = {  0, 255,   0, 255};
-static const Color COLOR_BLUE       = {  0,   0, 255, 255};
-static const Color COLOR_WHITE      = {255, 255, 255, 255};
-static const Color COLOR_BLACK      = {  0,   0,   0, 255};
-static const Color COLOR_YELLOW     = {255, 255,   0, 255};
-static const Color COLOR_CYAN       = {  0, 255, 255, 255};
-static const Color COLOR_MAGENTA    = {255,   0, 255, 255};
-static const Color COLOR_ORANGE     = {255, 165,   0, 255};
-static const Color COLOR_PURPLE     = {128,   0, 128, 255};
-static const Color COLOR_PINK       = {255, 192, 203, 255};
-static const Color COLOR_LIME       = { 50, 205,  50, 255};
-static const Color COLOR_SKYBLUE    = {135, 206, 235, 255};
-static const Color COLOR_GOLD       = {255, 215,   0, 255};
-static const Color COLOR_BROWN      = {139,  69,  19, 255};
-static const Color COLOR_LIGHTGRAY  = {200, 200, 200, 255};
-static const Color COLOR_GRAY       = {130, 130, 130, 255};
-static const Color COLOR_DARKGRAY   = { 80,  80,  80, 255};
+typedef struct
+{
+  float x;
+  float y;
+  float z;
+} Vec3;
+
+Vec3i vec3_i(Vec3 vec);
+Vec3 vec3i_f(Vec3i vec);
+
+typedef struct
+{
+  int x;
+  int y;
+  int z;
+  int w;
+} Vec4i;
+
+typedef struct
+{
+  float x;
+  float y;
+  float z;
+  float w;
+} Vec4;
+
+Vec4i vec4_i(Vec4 vec);
+Vec4 vec4i_f(Vec4i vec);

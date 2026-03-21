@@ -5,11 +5,12 @@
 #include "nx_inputs.h"
 
 bool window_create(const char *title, int width, int height);
-bool window_isOpen();
-void window_stop();
-void window_close();
-void clear_background(const Color *color);
+bool window_isOpen(void);
+void window_stop(void);
+void window_close(void);
 
-int window_get_width();
-int window_get_height();
-Vec2i window_get_size();
+int window_get_width(void);
+int window_get_height(void);
+Vec2i window_get_size(void);
+
+void clear_background(const Color *color);

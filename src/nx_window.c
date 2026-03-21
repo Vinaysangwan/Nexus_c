@@ -14,8 +14,16 @@ static int windowHeight = 0;
 // #############################################################################
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
+#define WGL_CONTEXT_MAJOR_VERSION_ARB     0x2091
+#define WGL_CONTEXT_MINOR_VERSION_ARB     0x2092
+#define WGL_CONTEXT_FLAGS_ARB             0x2094
+#define WGL_CONTEXT_PROFILE_MASK_ARB      0x9126
+#define WGL_CONTEXT_CORE_PROFILE_BIT_ARB  0x00000001
+#define WGL_CONTEXT_DEBUG_BIT_ARB         0x00000001
 #include <Windows.h>
 #include <Windowsx.h>
+
+typedef HGLRC(WINAPI* PFNWGLCREATECONTEXTATTRIBSARBPROC)(HDC, HGLRC, const int*);
 
 // ------- WIN API Statics ------------------------------- //
 static HWND window;
@@ -179,9 +187,40 @@ bool window_create(const char *title, int width, int height)
   {
     return false;
   }
+  
+  // create dummy OpenGL Context
+  HGLRC dummy_glrc = wglCreateContext(dc);
+  if (!dummy_glrc)
+  {
+    return false;
+  }
+  if (!wglMakeCurrent(dc, dummy_glrc))
+  {
+    return false;
+  }
 
-  // Create OpenGL Context
-  glrc = wglCreateContext(dc);
+  // load the extension
+  PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB = 
+    (PFNWGLCREATECONTEXTATTRIBSARBPROC)wglGetProcAddress("wglCreateContextAttribsARB");
+  if (!wglCreateContextAttribsARB)
+  {
+    return false;
+  }
+
+  // destroy dummy context
+  wglMakeCurrent(NULL, NULL);
+  wglDeleteContext(dummy_glrc);
+
+  // Context Attribs
+  int attribs[] = {
+    WGL_CONTEXT_MAJOR_VERSION_ARB, 4,
+    WGL_CONTEXT_MINOR_VERSION_ARB, 3,
+    WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
+    0
+  };
+
+  // create real OpenGL 4.3 core context
+  glrc = wglCreateContextAttribsARB(dc, NULL, attribs);
   if (!glrc)
   {
     return false;
@@ -205,7 +244,7 @@ bool window_create(const char *title, int width, int height)
   return true;
 }
 
-bool window_isOpen()
+bool window_isOpen(void)
 {
   // Swap Window Buffer
   SwapBuffers(dc);
@@ -225,7 +264,7 @@ bool window_isOpen()
   return running;
 }
 
-void window_close()
+void window_close(void)
 {
   if (window)
   {
@@ -242,23 +281,29 @@ void window_close()
   }
 }
 
+#elif __linux__
+// TODO: Add Code to Support Linux
+
+#elif __APPLE__
+// TODO: Add Code to Support Apple
+
 #endif
 
 // #############################################################################
 //                           Common Functions
 // #############################################################################
 
-int window_get_width()
+int window_get_width(void)
 {
   return windowWidth;
 }
 
-int window_get_height()
+int window_get_height(void)
 {
   return windowHeight;
 }
 
-Vec2i window_get_size()
+Vec2i window_get_size(void)
 {
   return (Vec2i){windowWidth, windowHeight};
 }
@@ -269,7 +314,7 @@ void clear_background(const Color *color)
   glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void window_stop()
+void window_stop(void)
 {
   running = false;
 }
