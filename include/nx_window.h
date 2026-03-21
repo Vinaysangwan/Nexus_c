@@ -6,6 +6,7 @@
 
 bool create_window(const char *title, int width, int height);
 bool window_isOpen();
+void stop_window();
 void close_window();
 void clear_background(const Color *color);
 

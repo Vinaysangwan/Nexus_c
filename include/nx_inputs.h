@@ -3,7 +3,7 @@
 #include "nx_utils.h"
 
 // #############################################################################
-//                           KeyCodes
+//                           Enums
 // #############################################################################
 typedef enum {
   // Letters
@@ -45,6 +45,14 @@ typedef enum {
   KEY_COUNT = 256
 } KeyCode;
 
+typedef enum {
+  MOUSE_LEFT   = 0,
+  MOUSE_RIGHT  = 1,
+  MOUSE_MIDDLE = 2,
+
+  MOUSE_BTN_COUNT = 3,
+} MouseButton;
+
 // #############################################################################
 //                           Structs
 // #############################################################################
@@ -53,6 +61,13 @@ typedef struct
   // Keyboard
   unsigned char prevKeys[KEY_COUNT];
   unsigned char currKeys[KEY_COUNT];
+
+  // Mouse
+  unsigned char prevMouseBtns[MOUSE_BTN_COUNT];
+  unsigned char currMouseBtns[MOUSE_BTN_COUNT];
+  int mouseX, mouseY;
+  int prevMouseX, prevMouseY;
+  int mouseScroll;
 } Input;
 
 // #############################################################################
@@ -69,7 +84,15 @@ bool key_pressed(KeyCode key);
 bool key_released(KeyCode key);
 
 // Mouse Functions
-
+bool mouse_button_down(MouseButton btn);
+bool mouse_button_pressed(MouseButton btn);
+bool mouse_button_released(MouseButton btn);
+int mouse_x(void);
+int mouse_y(void);
+Vec2i mouse_pos(void);
+int mouse_dx(void);
+int mouse_dy(void);
+int mouse_scroll(void);
 
 // Common Functions
-void input_update();
+void input_update(void);
