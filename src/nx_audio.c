@@ -1,6 +1,6 @@
 #include "Nexus_c.h"
 #define MINIAUDIO_IMPLEMENTATION
-#include "miniaudio/miniaudio.h"
+#include "vendor/miniaudio/miniaudio.h"
 
 #include <stdio.h>
 #include <stdlib.h>
