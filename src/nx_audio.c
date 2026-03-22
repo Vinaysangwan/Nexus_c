@@ -72,6 +72,7 @@ NxSound* sound_load(const char* path)
       strncpy(s->path, path, sizeof(s->path) - 1);
       s->path[sizeof(s->path) - 1] = '\0';
   #endif
+
   s->volume = 1.0f;
 
   /* Eagerly init slot 0 so we catch bad paths early */
