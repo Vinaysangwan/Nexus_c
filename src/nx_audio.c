@@ -1,4 +1,4 @@
-#include "nx_audio.h"
+#include "Nexus_c.h"
 #define MINIAUDIO_IMPLEMENTATION
 #include "miniaudio/miniaudio.h"
 
