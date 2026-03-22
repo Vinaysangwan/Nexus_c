@@ -1,7 +1,6 @@
 #include "Nexus_c.h"
 
 #include <string.h>
-#include <windows.h>
 
 Input input = {0};
 

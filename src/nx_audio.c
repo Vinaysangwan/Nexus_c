@@ -21,6 +21,7 @@ bool audio_init(void)
   {
     return true;
   }
+
   ma_result result = ma_engine_init(NULL, &audioEngine);
   if(result != MA_SUCCESS)
   {
@@ -65,7 +66,12 @@ NxSound* sound_load(const char* path)
   NxSound* s = (NxSound*)calloc(1, sizeof(NxSound));
   if (!s) return NULL;
 
-  strncpy_s(s->path, sizeof(s->path), path, sizeof(s->path)-1);
+  #ifdef _WIN32
+      strncpy_s(s->path, sizeof(s->path), path, sizeof(s->path) - 1);
+  #else
+      strncpy(s->path, path, sizeof(s->path) - 1);
+      s->path[sizeof(s->path) - 1] = '\0';
+  #endif
   s->volume = 1.0f;
 
   /* Eagerly init slot 0 so we catch bad paths early */
