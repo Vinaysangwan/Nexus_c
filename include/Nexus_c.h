@@ -14,7 +14,7 @@
 */
 
 // #############################################################################
-//                           Utils.h
+//                           Utils_h
 // #############################################################################
 #ifndef __cplusplus
   #include <stdbool.h>
@@ -102,7 +102,7 @@ typedef struct
 } Vec4;
 
 // #############################################################################
-//                           Input.h
+//                           Input_h
 // #############################################################################
 typedef enum {
   // Letters
@@ -194,7 +194,7 @@ int mouse_scroll(void);
 void input_update(void);
 
 // #############################################################################
-//                           Window.h
+//                           Window_h
 // #############################################################################
 Vec4i vec4_i(Vec4 vec);
 Vec4 vec4i_f(Vec4i vec);
@@ -203,6 +203,8 @@ bool window_create(const char *title, int width, int height);
 bool window_isOpen(void);
 void window_stop(void);
 void window_close(void);
+void window_set_vsync(bool enable);
+void window_swap_buffers(void);
 
 int window_get_width(void);
 int window_get_height(void);
@@ -211,7 +213,7 @@ Vec2i window_get_size(void);
 void clear_background(const Color *color);
 
 // #############################################################################
-//                           Audio.h
+//                           Audio_h
 // #############################################################################
 bool audio_init(void);
 void audio_close(void);
@@ -247,7 +249,7 @@ void music_set_volume(NxMusic* music, float volume);
 float music_get_volume(NxMusic* music);
 
 // #############################################################################
-//                           KHR.h
+//                           KHR_h
 // #############################################################################
 #ifndef __khrplatform_h_
 #define __khrplatform_h_
@@ -563,7 +565,7 @@ typedef enum {
 
 
 // #############################################################################
-//                           glad.h
+//                           glad_h
 // #############################################################################
 #ifndef __glad_h_
 #define __glad_h_

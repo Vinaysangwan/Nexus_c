@@ -23,7 +23,9 @@ static int windowHeight = 0;
 #include <Windows.h>
 #include <Windowsx.h>
 
+// ------- WIN API typedefs ------------------------------- //
 typedef HGLRC(WINAPI* PFNWGLCREATECONTEXTATTRIBSARBPROC)(HDC, HGLRC, const int*);
+typedef BOOL (WINAPI *PFNWGLSWAPINTERVALEXTPROC)(int interval);
 
 // ------- WIN API Statics ------------------------------- //
 static HWND window;
@@ -31,6 +33,7 @@ static wchar_t wtitle[256];
 static HINSTANCE instance;
 static HDC dc;
 static HGLRC glrc;
+static PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT = NULL;
 
 // ------- Callbacks ------------------------------- //
 static LRESULT CALLBACK window_proc_callback(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -230,6 +233,9 @@ bool window_create(const char *title, int width, int height)
     return false;
   }
 
+  // Create Funcitons Pointer for SwapIntervals
+  wglSwapIntervalEXT = (PFNWGLSWAPINTERVALEXTPROC) wglGetProcAddress("wglSwapIntervalEXT");
+
   // Init GLAD
   if(!gladLoadGL())
   {
@@ -246,10 +252,6 @@ bool window_create(const char *title, int width, int height)
 
 bool window_isOpen(void)
 {
-  // Swap Window Buffer
-  SwapBuffers(dc);
-  ValidateRect(window, NULL);
-  
   // Update Inputs
   input_update();
 
@@ -262,6 +264,13 @@ bool window_isOpen(void)
   }
 
   return running;
+}
+
+void window_swap_buffers(void)
+{
+  // Swap Window Buffer
+  SwapBuffers(dc);
+  ValidateRect(window, NULL);
 }
 
 void window_close(void)
@@ -278,6 +287,14 @@ void window_close(void)
     UnregisterClassW(wtitle, instance);
     window = NULL;
     running = false;
+  }
+}
+
+void window_set_vsync(bool enable)
+{
+  if (wglSwapIntervalEXT)
+  {
+    wglSwapIntervalEXT(enable ? 1 : 0);
   }
 }
 
