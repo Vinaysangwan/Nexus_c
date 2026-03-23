@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
 /*
   # File Structure
   -> glad
@@ -12,10 +16,8 @@
 // #############################################################################
 //                           Utils.h
 // #############################################################################
-#ifndef bool
-  #define bool _Bool
-  #define true 1
-  #define false 0
+#ifndef __cplusplus
+  #include <stdbool.h>
 #endif
 
 // #############################################################################
@@ -5216,4 +5218,8 @@ GLAPI PFNGLGETOBJECTPTRLABELPROC glad_glGetObjectPtrLabel;
 }
 #endif
 
+#endif
+
+#ifdef __cplusplus
+}
 #endif
