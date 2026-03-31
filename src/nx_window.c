@@ -148,12 +148,16 @@ bool window_create(const char *title, int width, int height)
 
   int dwStyle = WS_OVERLAPPEDWINDOW;
 
+  RECT rect = {0, 0, width, height};
+  AdjustWindowRect(&rect, dwStyle, FALSE);
+
   // Create Window
   window = CreateWindowExW(
     0,
     wtitle, wtitle,
     dwStyle,
-    CW_USEDEFAULT, CW_USEDEFAULT, width, height,
+    CW_USEDEFAULT, CW_USEDEFAULT,
+    rect.right - rect.left, rect.bottom - rect.top,
     NULL, NULL,
     instance,
     NULL
