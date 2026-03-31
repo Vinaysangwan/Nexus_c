@@ -6,6 +6,7 @@
 static bool running = true;
 static int windowWidth = 0;
 static int windowHeight = 0;
+static float deltaTime = 0;
 
 #ifdef _WIN32
 
@@ -34,6 +35,9 @@ static HINSTANCE instance;
 static HDC dc;
 static HGLRC glrc;
 static PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT = NULL;
+
+static LARGE_INTEGER frequency;
+static LARGE_INTEGER lastTime;
 
 // ------- Callbacks ------------------------------- //
 static LRESULT CALLBACK window_proc_callback(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -251,11 +255,22 @@ bool window_create(const char *title, int width, int height)
 
   // Display Window
   ShowWindow(window, SW_SHOWDEFAULT);
+
+  // Intialize frequency and lastTime
+  QueryPerformanceFrequency(&frequency);
+  QueryPerformanceCounter(&lastTime);
+  
   return true;
 }
 
 bool window_isOpen(void)
 {
+  // Calculate DeltaTime
+  LARGE_INTEGER currentTime;
+  QueryPerformanceCounter(&currentTime);
+  deltaTime = (float)(currentTime.QuadPart - lastTime.QuadPart) / frequency.QuadPart;
+  lastTime = currentTime;
+  
   // Update Inputs
   input_update();
 
@@ -300,6 +315,11 @@ void window_set_vsync(bool enable)
   {
     wglSwapIntervalEXT(enable ? 1 : 0);
   }
+}
+
+float get_deltaTime(void)
+{
+  return deltaTime;
 }
 
 #elif __linux__
